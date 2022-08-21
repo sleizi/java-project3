@@ -1,7 +1,7 @@
 package com.udacity.catpoint.data;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -64,9 +64,10 @@ public class PretendDatabaseSecurityRepositoryImpl implements SecurityRepository
     }
 
     @Override
-    public void setAlarmStatus(AlarmStatus alarmStatus) {
+    public Object setAlarmStatus(AlarmStatus alarmStatus) {
         this.alarmStatus = alarmStatus;
         prefs.put(ALARM_STATUS, this.alarmStatus.toString());
+        return null;
     }
 
     @Override

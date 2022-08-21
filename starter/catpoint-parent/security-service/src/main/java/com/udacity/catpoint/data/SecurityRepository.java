@@ -9,11 +9,9 @@ public interface SecurityRepository {
     void addSensor(Sensor sensor);
     void removeSensor(Sensor sensor);
     void updateSensor(Sensor sensor);
-    void setAlarmStatus(AlarmStatus alarmStatus);
+    Object setAlarmStatus(AlarmStatus alarmStatus);
     void setArmingStatus(ArmingStatus armingStatus);
     Set<Sensor> getSensors();
     AlarmStatus getAlarmStatus();
     ArmingStatus getArmingStatus();
-
-
 }
