@@ -11,8 +11,8 @@ public enum AlarmStatus {
     PENDING_ALARM("I'm in Danger...", new Color(200, 150, 20)),
     ALARM("Awooga!", new Color(250, 80, 50));
 
-    private final String description;
-    private final Color color;
+    private String description;
+    private Color color;
 
     AlarmStatus(String description, Color color) {
         this.description = description;

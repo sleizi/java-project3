@@ -29,7 +29,7 @@ class SecurityServiceTest {
     private SecurityRepository securityRepository;
 
     @Mock
-    private final ImageService imageService = new FakeImageService();
+    private ImageService imageService = new FakeImageService();
 
     @InjectMocks
     SecurityService securityService;
@@ -113,14 +113,20 @@ class SecurityServiceTest {
         verify(securityRepository).setAlarmStatus(AlarmStatus.ALARM);
     }
 
-    @Test
     @DisplayName("8. If the camera image does not contain a cat, change the status to no alarm as long as the sensors are not active.")
-    void setAlarmStatus__imageNotCat_sensorNotActivated__thenNoAlarm() {
-        sensor.setActive(false);
+    @ParameterizedTest(name = "There is active sensor: {0}")
+    @ValueSource(booleans = {true, false})
+    void setAlarmStatus__imageNotCat_sensorNotActivated__thenNoAlarm(boolean active) {
+        sensor.setActive(active);
+        Set<Sensor> sensors = new HashSet<>();
+        sensors.add(sensor);
+        when(securityRepository.getSensors()).thenReturn(sensors);
         BufferedImage image = new BufferedImage(1, 1, 1);
         when(imageService.imageContainsCat(image, 50.0f)).thenReturn(false);
         securityService.processImage(image);
-        verify(securityRepository).setAlarmStatus(AlarmStatus.NO_ALARM);
+        if (!active) {
+            verify(securityRepository).setAlarmStatus(AlarmStatus.NO_ALARM);
+        } else verify(securityRepository, times(0)).setAlarmStatus(AlarmStatus.NO_ALARM);
     }
 
     @Test

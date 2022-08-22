@@ -11,8 +11,8 @@ public enum ArmingStatus {
     ARMED_HOME("Armed - At Home", new Color(190, 180, 50)),
     ARMED_AWAY("Armed - Away", new Color(170, 30, 150));
 
-    private final String description;
-    private final Color color;
+    private String description;
+    private Color color;
 
     ArmingStatus(String description, Color color) {
         this.description = description;
