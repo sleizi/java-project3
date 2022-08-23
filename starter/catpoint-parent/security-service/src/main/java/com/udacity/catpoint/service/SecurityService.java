@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
 
 /**
  * Service that receives information about changes to the security system. Responsible for
@@ -38,21 +37,6 @@ public class SecurityService {
      *
      * @param armingStatus
      */
-//    public void setArmingStatus(ArmingStatus armingStatus) {
-//        if (armingStatus == ArmingStatus.ARMED_HOME && catDetected) {
-//            setAlarmStatus(AlarmStatus.ALARM);
-//        }
-//        if (armingStatus == ArmingStatus.DISARMED) {
-//            setAlarmStatus(AlarmStatus.NO_ALARM);
-//        } else {
-//            for (Sensor sensor : getSensors()) {
-//                sensor.setActive(false);
-//                updateSensor(sensor);
-//            }
-//        }
-//        securityRepository.setArmingStatus(armingStatus);
-//        statusListeners.forEach(StatusListener::sensorStatusChanged);
-//    }
     public void setArmingStatus(ArmingStatus armingStatus) {
         if (armingStatus == ArmingStatus.DISARMED) {
             setAlarmStatus(AlarmStatus.NO_ALARM);
@@ -60,8 +44,8 @@ public class SecurityService {
             if (catDetected) {
                 setAlarmStatus(AlarmStatus.ALARM);
             }
-            Set<Sensor> sensors = getSensors().stream().peek(sensor -> sensor.setActive(false)).collect(Collectors.toSet());
-            sensors.forEach(this::updateSensor);
+            ConcurrentSkipListSet<Sensor> sensors = new ConcurrentSkipListSet<>(getSensors());
+            sensors.forEach(sensor -> changeSensorActivationStatus(sensor, false));
         }
         securityRepository.setArmingStatus(armingStatus);
         statusListeners.forEach(StatusListener::sensorStatusChanged);
@@ -175,10 +159,6 @@ public class SecurityService {
 
     public void addSensor(Sensor sensor) {
         securityRepository.addSensor(sensor);
-    }
-
-    public void updateSensor(Sensor sensor) {
-        securityRepository.updateSensor(sensor);
     }
 
     public void removeSensor(Sensor sensor) {
